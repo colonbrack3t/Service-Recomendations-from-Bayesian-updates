@@ -12,7 +12,9 @@ Prototype for Service Recomendations using a Bayesian Update model
 
 ![image](https://user-images.githubusercontent.com/26506402/190587253-6b20b90b-365c-40ee-88cd-674a77b981b0.png)
 
-This equation from Bayes Theorem posits that the updated posterior belief of a state A, given the evidence B, is proportional to the likelihood of evidence B given the prior belief in A, and the prior probability of A. In Leh man's terms: The probability I am in state A given I have experienced some sensation B, is proportional to the probabilty of experiencing B given I am in state A, and what I thought the probabilty for A was before I experienced B
+This equation from Bayes Theorem posits that the updated posterior belief of a state A, given the evidence B, is proportional to the likelihood of evidence B given the prior belief in A, and the prior probability of A. 
+
+In Layman's terms: The probability I am in state A given I have experienced some sensation B, is proportional to the probabilty of experiencing B given I am in state A, and what I thought the probabilty for A was before I experienced B
 
 Thus, the Bayes Theorem is refered to as <b>posterior is proportional to the product of likelihood and prior</b>
 # Implementation
