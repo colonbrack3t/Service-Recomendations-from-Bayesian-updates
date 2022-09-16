@@ -6,7 +6,7 @@ Prototype for Service Recomendations using a Bayesian Update model
 
 - Cons- scalability may be difficult
 
-- TODO review if what I have previously set as 0 prob should really be 0.5
+- TODO review if what I have previously set as 0 prob should really be 0.5, tweak likelihood equation (unsure whether it is actually calculating likelihood accurately)
 
 ## Explanation of approach
 
