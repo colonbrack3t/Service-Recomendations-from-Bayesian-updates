@@ -2,12 +2,13 @@
 
 Prototype for Service Recomendations using a Bayesian Update model]
 
-Pros- user does not have to enter perfect paths
-Cons- scalability may be difficult
+- Pros- user does not have to enter perfect paths
 
-TODO review if what I have previously set as 0 prob should really be 0.5
+- Cons- scalability may be difficult
 
-Explanation of approach
+- TODO review if what I have previously set as 0 prob should really be 0.5
+
+## Explanation of approach
 
 ![image](https://user-images.githubusercontent.com/26506402/190587253-6b20b90b-365c-40ee-88cd-674a77b981b0.png)
 
