@@ -1,7 +1,3 @@
-
-from telnetlib import SE
-
-
 PARENTING = 0
 SOCIAl = 1
 FINANCIAL = 2
