@@ -1,4 +1,4 @@
-# Service-Recomendations-from-Bayesian-updates
+# Service Recomendations from Bayesian updates
 
 Prototype for Service Recomendations using a Bayesian Update model]
 
