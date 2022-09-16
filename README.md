@@ -36,7 +36,7 @@ For a given Service, the weights represent the probability someone who needs a g
 ## Questions
 The Question class represents a given question in the survey. It contains the question (expected to always be yes/no), a 'yes' weights and 'no' weights. If only presented with a 'yes' weights, it will generate the inverse for 'no' weights on its own. Answering a question will create a new 'evidence' or 'experience' which we will use in the Bayes equation to create our 'likelihood'.
 
-The weights here represents the probability of someone needing a given category, from the context of the question alone. For example, the question 'Do you have children' would have a weight vertex of [1,0,0.6,0]  the logic being children means you may need parenting help, and you may have monetary concerns (these weights can be easily changed, the weights in the file at the moment are purely proof-of-concept).
+The weights here represents the probability of someone needing a given category, from the context of the question alone. For example, the question 'Do you have children' would have a weight vertex of [0.8,0,0.6,0]  the logic being children means you may need parenting help (not 100% certainty though), and you may have monetary concerns (these weights can be easily changed, the weights in the file at the moment are purely proof-of-concept).
 
 ## Bayesian Updater
 The Bayesian Updater has a number of attributes. The questions and services arrays are for storing and referencing. It also contains a weights vertex, which represents the Updater's belief in the user's needs. It is initialised as an array of 0.5s as this represents no favour (50-50 chance to be relevant)
