@@ -1,5 +1,4 @@
-
-from importlib.metadata import distribution
+import sys
 from math import pi, exp
 from scipy.stats import norm
 
@@ -84,7 +83,7 @@ class Question:
             
             self.weights_yes = weights_y
             self.weights_no = weights_n
-            print(weights_y,self.weights_yes)
+          
     def __str__(self):
         return f'{self.m_question_string}, weights_yes = [{[str(k) + " " +  str(v) for k,v in self.weights_yes.items()]}], weights_no = [{[str(k)  + " " +  str(v)  for k,v in self.weights_no]}]'
 class Service:
@@ -99,8 +98,9 @@ class BayesianUpdater:
     services = []
     states = category_dict.copy()
     question_index = 0
-
-    def __init__(self):
+    log = False
+    def __init__(self,log = False):
+        self.log = log
         self.questions.append(Question('Do you have kids?', flat_array_y = [0.8,0.5,0.6,0.5]))
         self.questions.append(Question("Do you spend time with friends?", flat_array_y = [0.5,0.1,0.4,0.4]))
         self.questions.append(Question("Do you have dark thoughts?", flat_array_y = [0.5,0.6,0.5,0.9]))
@@ -148,7 +148,6 @@ class BayesianUpdater:
         
     def Update(self):
         data = self.AskQuestion()
-        print(data)
 
         for x in range(NUM_CATEGORIES):
             prior = self.states[x]
@@ -159,7 +158,8 @@ class BayesianUpdater:
             
             
             normalisation = 0.5# self.CalculateNormalisation(data,d)
-            print(prior,d.mean,d.standard_deviation,likelihood)
+            if self.log:
+                print(x, 'Prior:',prior,', z mean:',d.mean,',\nz standard deviation:',d.standard_deviation,', Likelihood:',likelihood)
             posterior = (prior * likelihood)/normalisation
            
             self.states[x] = posterior
@@ -171,26 +171,32 @@ class BayesianUpdater:
             squared_sum += squared_dist
         
         return pow(squared_sum, 0.5)
+    
     def BestSuggestion(self):
         threshold =1
         suggestions = []
         for i in range(len(self.services)):
             service = self.services[i]
             dist = self.CalculateDistanceOfWeights(service.weights)
-            print(dist)
+            if self.log:
+                print('Service:', service.service_name, ', Distance:',dist)
             if dist < threshold:
-                suggestions.append(service)
+                suggestions.append((service, dist))
         return suggestions
     
     def Cycle(self):
         self.Update()
-        for s in self.BestSuggestion():
-            print(s.service_name)
-        print(self.states)
+        for s,d in self.BestSuggestion():
+            print(s.service_name, f'{round((1 - d) * 100) }%')
+        if self.log:
+            print('Current belief:',self.states)
 
 if __name__ == "__main__":
- 
-    bu = BayesianUpdater()
+    print("TODO : Change Services to use Normal Distribution using QuestionCategoryProbability")
+    log = '-v' in sys.argv
+    if not log:
+        print("\nbtw, run this with -v for verbose mode :)\n")
+    bu = BayesianUpdater(log=log)
     for _ in range(1000):
         bu.Cycle()
         input()
