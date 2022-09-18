@@ -1,23 +1,24 @@
 
+from importlib.metadata import distribution
 from math import pi, exp
 from scipy.stats import norm
 
 PARENTING = 0
-SOCIAl = 1
+SOCIAL = 1
 FINANCIAL = 2
 COUNSELING = 3
 #copy & paste to create legible dicts
 category_dict = {
     PARENTING : 0.5,
-    SOCIAl : 0.5,
+    SOCIAL : 0.5,
     FINANCIAL : 0.5,
     COUNSELING : 0.5
 }
 NUM_CATEGORIES = 4
 
-CERTAIN_PROBABILTY_SD = 0.05
-MEDIUM_PROBABILITY_SD = 0.1
-UNCERTAIN_PROBABILITY_SD = 0.5
+CERTAIN_PROBABILTY_SD = 0.5
+MEDIUM_PROBABILITY_SD = 1
+UNCERTAIN_PROBABILITY_SD = 3
 
 class QuestionCategoryProbability:
     mean = 0
@@ -27,7 +28,7 @@ class QuestionCategoryProbability:
         self.standard_deviation = sd
     def likelihood(self,x):
         
-        return norm.(self.mean,self.standard_deviation).cdf()
+        return norm(x,self.standard_deviation).cdf(self.mean)
     def inverse(self):
         self.mean = 1- self.mean
     def __str__(self):
@@ -80,8 +81,10 @@ class Question:
                 weights_n = {k: v.inverse() for k,v in weights_y.items()}
             else:
                 weights_n = kwargs['distributions_no']
+            
             self.weights_yes = weights_y
             self.weights_no = weights_n
+            print(weights_y,self.weights_yes)
     def __str__(self):
         return f'{self.m_question_string}, weights_yes = [{[str(k) + " " +  str(v) for k,v in self.weights_yes.items()]}], weights_no = [{[str(k)  + " " +  str(v)  for k,v in self.weights_no]}]'
 class Service:
@@ -102,13 +105,28 @@ class BayesianUpdater:
         self.questions.append(Question("Do you spend time with friends?", flat_array_y = [0.5,0.1,0.4,0.4]))
         self.questions.append(Question("Do you have dark thoughts?", flat_array_y = [0.5,0.6,0.5,0.9]))
 
-        self.services.append(Service('Parent Group', [1,1,0,0]))
-        self.services.append(Service('Samaritans', [0,0.5,0,1]))
-        self.services.append(Service('Financial Advise', [0,0,1,0]))
+        self.questions.append(Question('Do you need Financial Advise?', 
+        distributions_yes={
+            PARENTING : QuestionCategoryProbability(0.5,UNCERTAIN_PROBABILITY_SD),
+            SOCIAL : QuestionCategoryProbability(0.5,UNCERTAIN_PROBABILITY_SD),
+            FINANCIAL : QuestionCategoryProbability(0.9,CERTAIN_PROBABILTY_SD),
+            COUNSELING : QuestionCategoryProbability(0.5,UNCERTAIN_PROBABILITY_SD),
+        },
+        distributions_no={
+            PARENTING : QuestionCategoryProbability(0.5,UNCERTAIN_PROBABILITY_SD),
+            SOCIAL : QuestionCategoryProbability(0.5,UNCERTAIN_PROBABILITY_SD),
+            FINANCIAL : QuestionCategoryProbability(0.2,MEDIUM_PROBABILITY_SD),
+            COUNSELING : QuestionCategoryProbability(0.5,UNCERTAIN_PROBABILITY_SD),
+        }))
+
+        self.services.append(Service('Parent Group', [0.8,0.6,0.5,0.5]))
+        self.services.append(Service('Samaritans', [0.5,0.6,0.5,0.8]))
+        self.services.append(Service('Financial Advise', [0.6,0.5,1,0.5]))
 
 
     def AskQuestion(self):
         q = self.SelectQuestion()
+    
         if 'y' in input(q.m_question_string):
             return q.weights_yes  
         return q.weights_no
@@ -130,7 +148,8 @@ class BayesianUpdater:
         
     def Update(self):
         data = self.AskQuestion()
-        #print(data)
+        print(data)
+
         for x in range(NUM_CATEGORIES):
             prior = self.states[x]
             d = data[x]
@@ -139,7 +158,7 @@ class BayesianUpdater:
             
             
             
-            normalisation = 4# self.CalculateNormalisation(data,d)
+            normalisation = 0.5# self.CalculateNormalisation(data,d)
             print(prior,d.mean,d.standard_deviation,likelihood)
             posterior = (prior * likelihood)/normalisation
            
