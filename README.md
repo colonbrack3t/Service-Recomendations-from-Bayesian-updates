@@ -8,6 +8,8 @@ Prototype for Service Recomendations using a Bayesian Update model
 
 - TODO Use normal distribution for Services Categories
 
+Useful tool for checking/creating Normal distributions: https://homepage.divms.uiowa.edu/~mbognar/applets/normal.html
+
 ## Explanation of approach
 
 ![image](https://user-images.githubusercontent.com/26506402/190587253-6b20b90b-365c-40ee-88cd-674a77b981b0.png)
